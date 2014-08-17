@@ -263,15 +263,9 @@ var context = canvas.getContext("2d");
 
 //Mouse handling w/ Events
 function clickHandler(event) {
-    if (states[currentState] == "Title") {
-        currentState = 1;
-        initGame();
-    } else if (states[currentState] == "Playing Game") {
+    if (states[currentState] == "Playing Game") {
         //Do nothing for now, but perhaps add 'pause' functionality later.
-    } else if (states[currentState] == "Game Over") {
-        currentState = 1;
-        initGame();
-    } else if (states[currentState] == "Player Wins") {
+    } else {
         currentState = 1;
         initGame();
     }
@@ -281,15 +275,9 @@ canvas.addEventListener("click", function (event) {
     clickHandler(event);
 });
 
-function getMousePos(canvas, event) {
-    var rect = canvas.getBoundingClientRect();
-    return [event.clientX - rect.left,
-    event.clientY - rect.top];
-}
-
 canvas.addEventListener("mousemove", function (event) {
-    var mousePos = getMousePos(canvas, event);
-    player.mx = mousePos[0], player.my = mousePos[1];
+    player.mx = event.layerX || event.offsetX;
+    player.my = event.layerY || event.offsetY;
 });
 
 //Finally Start Game Loop
