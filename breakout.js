@@ -22,25 +22,37 @@ function randomHexColorCode() {
     return '#' + Math.floor(Math.random() * 16777215).toString(16);
 }
 
-function traceCircle(x, y, r) {
+function drawLine(x1, y1, x2, y2, color) {
+    context.strokeStyle = color || "#000000";
+    context.moveTo(x1, y1);
+    context.lineTo(x2, y2);
+    context.stroke();
+    context.beginPath();
+}
+
+function traceCircle(x, y, r, color) {
+    context.strokeStyle = color || "#000000";
     context.arc(x, y, r, 0, Math.PI * 2);
     context.stroke();
     context.beginPath();
 }
 
-function traceRectangle(x, y, w, h) {
+function traceRectangle(x, y, w, h, color) {
+    context.strokeStyle = color || "#000000";
     context.rect(x, y, w, h);
     context.stroke();
     context.beginPath();
 }
 
-function fillCircle(x, y, r) {
+function fillCircle(x, y, r, color) {
+    context.fillStyle = color || "#000000";
     context.arc(x, y, r, 0, Math.PI * 2);
     context.fill();
     context.beginPath();
 }
 
-function fillRectangle(x, y, w, h) {
+function fillRectangle(x, y, w, h, color) {
+    context.fillStyle = color || "#000000";
     context.rect(x, y, w, h);
     context.fill();
     context.beginPath();
@@ -81,8 +93,8 @@ function Brick(x, y, color) {
         w = this.w;
         h = this.h;
         color = this.color;
-        context.fillStyle = color;
-        fillRectangle(x, y, w, h);
+        fillRectangle(x, y, w, h, color);
+        traceRectangle(x, y, w, h, bgColor);
     };
 }
 
@@ -98,8 +110,8 @@ function Player() {
         y = this.y;
         w = this.w;
         h = this.h;
-        context.fillStyle = "#000000";
         fillRectangle(x, y, w, h);
+        traceRectangle(x, y, w, h, bgColor);
     };
     this.update = function () {
         w = this.w;
@@ -110,17 +122,17 @@ function Player() {
 
 function Ball() {
     this.x = 200;
-    this.y = 100;
-    this.r = 15;
-    this.v = 10;
+    this.y = 120;
+    this.r = 10;
+    this.v = 8;
     this.dx = 0;
-    this.dy = 10;
+    this.dy = 8;
     this.draw = function () {
         x = this.x;
         y = this.y;
         r = this.r;
-        context.fillStyle = "#000000";
         fillCircle(x, y, r);
+        traceCircle(x, y, r, bgColor);
     };
     this.update = function () {
         x = this.x;
@@ -141,7 +153,7 @@ function Ball() {
             //Bouncing off platform/paddle/player
         } else if (y + r + dy > CANVAS_HEIGHT) {
             if (x + dx > player.x && x + dx < player.x + player.w) {
-                this.dx = (x - (player.x + player.w / 2)) / 4;
+                this.dx = (x - (player.x + player.w / 2)) / 5;
                 this.dy = -normalizedVelocity(v, this.dx);
                 //alert(this.dx + " " + this.dy);
             } else {
@@ -161,7 +173,7 @@ function initGame() { //Occurs on click, see clickHandler below
     bricks = [];
     for (var i = 0; i < 4; i++) {
         for (var j = 0; j < 4; j++) {
-            bricks.push(new Brick(i * 100, j * 20, randomHexColorCode()));
+            bricks.push(new Brick(i * 100, j * 25, randomHexColorCode()));
         }
     }
 }
@@ -176,6 +188,11 @@ function draw() {
         }
         ball.draw();
         player.draw();
+        //Debug lines
+        /*drawLine(0, 25, 400, 25);
+        drawLine(0, 50, 400, 50);
+        drawLine(0, 75, 400, 75);
+        drawLine(0, 100, 400, 100);*/
     } else if (states[currentState] == "Game Over") {
         drawGameOverScreen();
     }
