@@ -18,7 +18,7 @@ var ball;
 function normalizedVelocity(desiredVelocity, componentVelocity) {
     var dvSquared = Math.pow(desiredVelocity, 2);
     var cvSquared = Math.pow(componentVelocity, 2);
-    return Math.sqrt(dvSquared - cvSquared);
+    return Math.sqrt(dvSquared - cvSquared); //Could return NaN if not careful
 }
 
 function drawLine(x1, y1, x2, y2, color) {
@@ -173,7 +173,7 @@ function Ball() {
         for (i = 0; i < bricks.length; i++) {
             if (testCollision(ball, bricks[i])) {
                 toDestroy.unshift(i);
-                this.dy = (this.dy < 0) ? Math.abs(dy) : -Math.abs(dy);
+                this.dy = (dy < 0) ? Math.abs(dy) : -Math.abs(dy);
             }
         }
         //Destroy bricks (splice in reverse index order)
@@ -197,15 +197,16 @@ function Ball() {
             //Bouncing off platform/paddle/player
         } else if (y + r + dy > CANVAS_HEIGHT) {
             if (x + dx > player.x && x + dx < player.x + player.w) {
-                this.dx = (x - (player.x + player.w / 2)) / 5;
+                this.dx = (x + dx - (player.x + player.w / 2)) / 5;
                 this.dy = -normalizedVelocity(v, this.dx);
                 //alert(this.dx + " " + this.dy);
             } else {
                 currentState = 2; //Game over
             }
         }
-        this.x += dx;
-        this.y += dy;
+        //if (isNaN(this.dy)) alert("this.dy is NaN");
+        this.x += this.dx;
+        this.y += this.dy;
     };
 }
 
@@ -232,6 +233,10 @@ function draw() {
         }
         ball.draw();
         player.draw();
+        //Debug
+        /*context.fillStyle = "#000000";
+        context.font = "10px Lucida Console";
+        context.fillText(String(Math.floor(ball.x))+", "+String(Math.floor(ball.y)), 350, 380);*/
     } else if (states[currentState] == "Game Over") {
         drawGameOverScreen();
     } else if (states[currentState] == "Player Wins") {
