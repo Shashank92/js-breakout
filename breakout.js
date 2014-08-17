@@ -276,8 +276,8 @@ canvas.addEventListener("click", function (event) {
 });
 
 canvas.addEventListener("mousemove", function (event) {
-    player.mx = event.layerX || event.offsetX;
-    player.my = event.layerY || event.offsetY;
+    player.mx = event.layerX || event.offsetX || 0;
+    player.my = event.layerY || event.offsetY || 0;
 });
 
 //Finally Start Game Loop
