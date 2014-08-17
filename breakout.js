@@ -98,18 +98,12 @@ function Player() {
         y = this.y;
         w = this.w;
         h = this.h;
-        mx = this.mx;
-        my = this.my;
         context.fillStyle = "#000000";
         fillRectangle(x, y, w, h);
     };
     this.update = function () {
-        x = this.x;
-        y = this.y;
         w = this.w;
-        h = this.h;
         mx = this.mx;
-        my = this.my;
         this.x = mx - w / 2;
     };
 }
@@ -117,40 +111,38 @@ function Player() {
 function Ball() {
     this.x = 200;
     this.y = 100;
+    this.r = 15;
     this.v = 10;
     this.dx = 0;
     this.dy = 10;
-    this.r = 15;
     this.draw = function () {
-        context.fillStyle = "#000000";
         x = this.x;
         y = this.y;
-        dx = this.dx;
-        dy = this.dy;
         r = this.r;
+        context.fillStyle = "#000000";
         fillCircle(x, y, r);
     };
     this.update = function () {
         x = this.x;
         y = this.y;
+        r = this.r;
         v = this.v;
         dx = this.dx;
         dy = this.dy;
-        r = this.r;
         //Bouncing off left and right walls
-        if (x + dx - r < 0) {
+        if (x - r + dx < 0) {
             this.dx = Math.abs(dx);
-        } else if (x + dx + r > CANVAS_WIDTH) {
-            this.dx = -1 * Math.abs(dx);
+        } else if (x + r + dx > CANVAS_WIDTH) {
+            this.dx = -Math.abs(dx);
         }
         //Bouncing off ceiling
-        if (y + dy - r < 0) {
+        if (y - r + dy < 0) {
             this.dy = Math.abs(dy);
             //Bouncing off platform/paddle/player
-        } else if (y + dy + r > CANVAS_HEIGHT) {
-            if (x > player.x && x < player.x + player.w) {
+        } else if (y + r + dy > CANVAS_HEIGHT) {
+            if (x + dx > player.x && x + dx < player.x + player.w) {
                 this.dx = (x - (player.x + player.w / 2)) / 4;
-                this.dy = -1 * normalizedVelocity(v, this.dx);
+                this.dy = -normalizedVelocity(v, this.dx);
                 //alert(this.dx + " " + this.dy);
             } else {
                 currentState = 2; //Game over
@@ -167,9 +159,11 @@ function initGame() { //Occurs on click, see clickHandler below
     ball = new Ball();
     player = new Player();
     bricks = [];
-    for (var i = 0; i < 4; i++)
-    for (var j = 0; j < 4; j++)
-    bricks.push(new Brick(i * 100, j * 20, randomHexColorCode()));
+    for (var i = 0; i < 4; i++) {
+        for (var j = 0; j < 4; j++) {
+            bricks.push(new Brick(i * 100, j * 20, randomHexColorCode()));
+        }
+    }
 }
 
 function draw() {
@@ -177,10 +171,11 @@ function draw() {
         drawTitleScreen();
     } else if (states[currentState] == "Game Running") {
         refreshScreen();
+        for (var i = 0; i < bricks.length; i++) {
+            bricks[i].draw();
+        }
         ball.draw();
         player.draw();
-        for (var i = 0; i < bricks.length; i++)
-        bricks[i].draw();
     } else if (states[currentState] == "Game Over") {
         drawGameOverScreen();
     }
@@ -234,4 +229,4 @@ intervalId = setInterval(gameLoop, 1000 / FPS);
 
 //Did I break anything?
 /*context.font = "30px Arial";
-context.fillText("Hello World",10,50);*/
+context.fillText("Hello World!",10,50);*/
