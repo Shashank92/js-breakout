@@ -233,10 +233,10 @@ function draw() {
         }
         ball.draw();
         player.draw();
-        //Debug
+        //Debug game w/ output
         /*context.fillStyle = "#000000";
         context.font = "10px Lucida Console";
-        context.fillText(String(Math.floor(ball.x))+", "+String(Math.floor(ball.y)), 350, 380);*/
+        context.fillText(String(Math.floor(ball.x)) + ", " + String(Math.floor(ball.y)), 350, 380);*/
     } else if (states[currentState] == "Game Over") {
         drawGameOverScreen();
     } else if (states[currentState] == "Player Wins") {
