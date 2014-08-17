@@ -108,7 +108,7 @@ function drawWinScreen() {
 function Brick(x, y, color) {
     this.x = x;
     this.y = y;
-    this.w = 100;
+    this.w = 80;
     this.h = 25;
     this.color = color;
     this.draw = function () {
@@ -216,9 +216,9 @@ function initGame() { //Occurs on click, see clickHandler below
     ball = new Ball();
     player = new Player();
     bricks = [];
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < 5; i++) {
         for (var j = 0; j < 4; j++) {
-            bricks.push(new Brick(i * 100, j * 25, rowColors[j]));
+            bricks.push(new Brick(i * 80, j * 25, rowColors[j]));
         }
     }
 }
