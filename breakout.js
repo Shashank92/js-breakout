@@ -64,10 +64,10 @@ function drawGameOverScreen() {
 
 //Classes
 function Ball() {
-    this.x = 50,
-    this.y = 200,
-    this.dx = 5,
-    this.dy = -5,
+    this.x = 200,
+    this.y = 100,
+    this.dx = 0,
+    this.dy = 5,
     this.r = 15,
     this.draw = function () {
         context.fillStyle = "#000000";
