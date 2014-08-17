@@ -12,6 +12,12 @@ var bricks;
 
 ////Library
 //Basic Helpers
+function normalizedVelocity(desiredVelocity, componentVelocity) {
+    dvSquared = Math.pow(desiredVelocity, 2);
+    cvSquared = Math.pow(componentVelocity, 2);
+    return Math.sqrt(dvSquared - cvSquared);
+}
+
 function randomHexColorCode() {
     return '#' + Math.floor(Math.random() * 16777215).toString(16);
 }
@@ -63,55 +69,30 @@ function drawGameOverScreen() {
 }
 
 //Classes
-function Ball() {
-    this.x = 200,
-    this.y = 100,
-    this.dx = 0,
-    this.dy = 5,
-    this.r = 15,
+function Brick(x, y, color) {
+    this.x = x;
+    this.y = y;
+    this.w = 100;
+    this.h = 25;
+    this.color = color;
     this.draw = function () {
-        context.fillStyle = "#000000";
         x = this.x;
         y = this.y;
-        dx = this.dx;
-        dy = this.dy;
-        r = this.r;
-        fillCircle(x, y, r);
-    };
-    this.update = function () {
-        x = this.x;
-        y = this.y;
-        dx = this.dx;
-        dy = this.dy;
-        r = this.r;
-        //Bouncing off left and right walls
-        if (x + dx + r > CANVAS_WIDTH || x + dx - r < 0) {
-            this.dx = -dx;
-        }
-        //Bouncing off ceiling
-        if (y + dy - r < 0) {
-            this.dy = -dy;
-            //Bouncing off platform/paddle/player
-        } else if (y + dy + r > CANVAS_HEIGHT) {
-            if (x > player.x && x < player.x + player.w) {
-                this.dy = -dy;
-                this.dx = (x - (player.x + player.w / 2)) / 4;
-            } else {
-                currentState = 2; //Game over
-            }
-        }
-        this.x += dx;
-        this.y += dy;
+        w = this.w;
+        h = this.h;
+        color = this.color;
+        context.fillStyle = color;
+        fillRectangle(x, y, w, h);
     };
 }
 
 function Player() {
-    this.x = 160,
-    this.y = 390,
-    this.w = 80,
-    this.h = 10,
-    this.mx = 200,
-    this.my = 390,
+    this.x = 160;
+    this.y = 390;
+    this.w = 80;
+    this.h = 10;
+    this.mx = 200;
+    this.my = 390;
     this.draw = function () {
         x = this.x;
         y = this.y;
@@ -133,20 +114,50 @@ function Player() {
     };
 }
 
-function Brick(x, y, color) {
-    this.x = x;
-    this.y = y;
-    this.w = 100;
-    this.h = 25;
-    this.color = color;
+function Ball() {
+    this.x = 200;
+    this.y = 100;
+    this.v = 10;
+    this.dx = 0;
+    this.dy = 10;
+    this.r = 15;
     this.draw = function () {
+        context.fillStyle = "#000000";
         x = this.x;
         y = this.y;
-        w = this.w;
-        h = this.h;
-        color = this.color;
-        context.fillStyle = color;
-        fillRectangle(x, y, w, h);
+        dx = this.dx;
+        dy = this.dy;
+        r = this.r;
+        fillCircle(x, y, r);
+    };
+    this.update = function () {
+        x = this.x;
+        y = this.y;
+        v = this.v;
+        dx = this.dx;
+        dy = this.dy;
+        r = this.r;
+        //Bouncing off left and right walls
+        if (x + dx - r < 0) {
+            this.dx = Math.abs(dx);
+        } else if (x + dx + r > CANVAS_WIDTH) {
+            this.dx = -1 * Math.abs(dx);
+        }
+        //Bouncing off ceiling
+        if (y + dy - r < 0) {
+            this.dy = Math.abs(dy);
+            //Bouncing off platform/paddle/player
+        } else if (y + dy + r > CANVAS_HEIGHT) {
+            if (x > player.x && x < player.x + player.w) {
+                this.dx = (x - (player.x + player.w / 2)) / 4;
+                this.dy = -1 * normalizedVelocity(v, this.dx);
+                //alert(this.dx + " " + this.dy);
+            } else {
+                currentState = 2; //Game over
+            }
+        }
+        this.x += dx;
+        this.y += dy;
     };
 }
 
