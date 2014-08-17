@@ -84,8 +84,10 @@ function refreshScreen() {
 function drawTitleScreen() {
     refreshScreen();
     context.fillStyle = "#000000";
+    context.font = "48px Impact";
+    context.fillText("Breakout", 115, 180);
     context.font = "24px Lucida Console";
-    context.fillText("Click to Start!", 100, 180);
+    context.fillText("Click to Start!", 100, 240);
 }
 
 function drawGameOverScreen() {
