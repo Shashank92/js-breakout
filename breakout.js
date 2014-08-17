@@ -16,8 +16,8 @@ var ball;
 ////Library
 //Basic Helpers
 function normalizedVelocity(desiredVelocity, componentVelocity) {
-    dvSquared = Math.pow(desiredVelocity, 2);
-    cvSquared = Math.pow(componentVelocity, 2);
+    var dvSquared = Math.pow(desiredVelocity, 2);
+    var cvSquared = Math.pow(componentVelocity, 2);
     return Math.sqrt(dvSquared - cvSquared);
 }
 
