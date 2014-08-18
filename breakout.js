@@ -12,6 +12,8 @@ var states = ["Title", "Playing Game", "Game Over", "Player Wins"];
 var bricks;
 var player;
 var ball;
+var startTime = 0;
+var elapsedTime = 0;
 
 ////Library
 //Basic Helpers
@@ -96,6 +98,8 @@ function drawGameOverScreen() {
     context.font = "24px Lucida Console";
     context.fillText("Game Over!", 140, 150);
     context.fillText("Click to play again!", 80, 200);
+    context.font = "36px Impact";
+    context.fillText(elapsedTime + " seconds", 105, 270);
 }
 
 function drawWinScreen() {
@@ -104,6 +108,8 @@ function drawWinScreen() {
     context.font = "24px Lucida Console";
     context.fillText("Congrats, you won!", 90, 150);
     context.fillText("Click to play again!", 80, 200);
+    context.font = "36px Impact";
+    context.fillText(elapsedTime + " seconds", 105, 270);
 }
 
 //Classes
@@ -185,6 +191,7 @@ function Ball() {
         //Game won?
         if (!bricks.length) {
             currentState = 3;
+            elapsedTime = (new Date() - startTime) / 1000;
         }
 
         //Bouncing off left and right walls
@@ -204,6 +211,7 @@ function Ball() {
                 //alert(this.dx + " " + this.dy);
             } else {
                 currentState = 2; //Game over
+                elapsedTime = (new Date() - startTime) / 1000;
             }
         }
         //if (isNaN(this.dy)) alert("this.dy is NaN");
@@ -223,6 +231,7 @@ function initGame() { //Occurs on click, see clickHandler below
             bricks.push(new Brick(i * 80, j * 25, rowColors[j]));
         }
     }
+    startTime = new Date();
 }
 
 function draw() {
