@@ -190,8 +190,8 @@ function Ball() {
         }
         //Game won?
         if (!bricks.length) {
-            currentState = 3;
             elapsedTime = (new Date() - startTime) / 1000;
+            currentState = 3;
         }
 
         //Bouncing off left and right walls
@@ -210,8 +210,8 @@ function Ball() {
                 this.dy = -normalizedVelocity(v, this.dx);
                 //alert(this.dx + " " + this.dy);
             } else {
-                currentState = 2; //Game over
                 elapsedTime = (new Date() - startTime) / 1000;
+                currentState = 2; //Game over
             }
         }
         //if (isNaN(this.dy)) alert("this.dy is NaN");
@@ -222,7 +222,6 @@ function Ball() {
 
 //Game Loop Functions
 function initGame() { //Occurs on click, see clickHandler below
-    currentState = 1;
     ball = new Ball();
     player = new Player();
     bricks = [];
@@ -232,6 +231,7 @@ function initGame() { //Occurs on click, see clickHandler below
         }
     }
     startTime = new Date();
+    currentState = 1;
 }
 
 function draw() {
@@ -277,7 +277,6 @@ function clickHandler(event) {
     if (states[currentState] == "Playing Game") {
         //Do nothing for now, but perhaps add 'pause' functionality later.
     } else {
-        currentState = 1;
         initGame();
     }
 }
